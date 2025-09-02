@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 
 
-@pytest.fixture(scope='class', params=['firefox', 'msedge', 'opera'])
+@pytest.fixture(scope='class', params=['firefox', 'msedge'])
 def page(request):
     with sync_playwright() as p:
         launch_options = {
@@ -13,10 +13,10 @@ def page(request):
             browser = p.firefox.launch(**launch_options)
 
         elif request.param == 'msedge':
-            browser = p.chromium.launch(**launch_options)
-
-        elif request.param == 'opera':
-            browser = p.chromium.launch(**launch_options)
+            browser = p.chromium.launch(
+                **launch_options,
+                channel='msedge'
+            )
 
         new_page = browser.new_page()
         yield new_page
